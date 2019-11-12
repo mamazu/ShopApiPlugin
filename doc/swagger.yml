@@ -813,7 +813,7 @@ paths:
                     description: "User token invalid"
             security:
                 - bearerAuth: []
-                
+
     /orders/{tokenValue}:
         parameters:
             -   in: "path"
@@ -1126,6 +1126,8 @@ definitions:
     AvailableShippingMethods:
         type: "object"
         description: "Available shipping methods for each shipment."
+        required:
+            - 'shipments'
         properties:
             shipments:
                 type: "array"
@@ -1408,6 +1410,12 @@ definitions:
     Page:
         type: "object"
         description: "Generic page object."
+        required:
+            - "page"
+            - "limit"
+            - "pages"
+            - "total"
+            - "_links"
         properties:
             page:
                 description: "Current page number."
@@ -1483,16 +1491,24 @@ definitions:
                         example: "example@shop.com"
     Price:
         type: "object"
+        required:
+            - "current"
+            - "currency"
         properties:
             current:
                 description: "Calculated price for given channel. Price is stored as an integer, so by default it should be divided by 100."
                 type: "integer"
                 example: 1000
             currency:
+                description: "Currency code of the price you are providing"
                 type: "string"
+                minLength: 2
+                maxLength: 4
                 example: "PLN"
     EstimatedShippingCost:
         type: "object"
+        required:
+            - "price"
         properties:
             price:
                 $ref: "#/definitions/Price"
@@ -1557,17 +1573,24 @@ definitions:
                 $ref: "#/definitions/Price"
     RequestPasswordResetting:
         type: "object"
+        required:
+            - "email"
         properties:
             email:
                 type: "string"
                 example: "test@example.com"
     PasswordResetRequest:
         type: "object"
+        required:
+            - "password"
         properties:
             password:
                 $ref: "#/definitions/PasswordReset"
     PasswordReset:
-        type: object
+        type: "object"
+        required:
+            - "first"
+            - "second"
         properties:
             first:
                 type: "string"
@@ -1596,8 +1619,8 @@ definitions:
     LoginRequest:
         type: "object"
         required:
-            - email
-            - password
+            - "email"
+            - "password"
         properties:
             email:
                 type: "string"
@@ -1812,4 +1835,3 @@ definitions:
                     items:
                         type: "string"
                         example: "sylius.shop_api.additionalProp.not_null"
-
